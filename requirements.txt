@@ -1,0 +1,4 @@
+llama-index
+langchain-google-genai
+langchain
+paho-mqtt
