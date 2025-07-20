@@ -9,6 +9,9 @@ class QueryIdentificationEvent(Event):
 class TakeActionEvent(Event):
     query: str
 
+class GeneralInfoEvent(Event):
+    query: str
+
 class QueryIntent(BaseModel):
     # casual: bool = Field(description="When the user is asking a casual question or is greeting")
     restricted: bool = Field(description="When the user asks a sensitive information that may be harmful")
