@@ -2,9 +2,9 @@
 from pydantic import BaseModel, Field
 from llama_index.core.workflow import  Event
 
-class QueryIdentificationEvent(Event):
-    query: str
-    type: str
+# class QueryIdentificationEvent(Event):
+#     query: str
+#     type: str
 
 class TakeActionEvent(Event):
     query: str

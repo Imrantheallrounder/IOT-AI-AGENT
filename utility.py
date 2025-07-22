@@ -19,4 +19,4 @@ class utility:
         mqtt_client.connect(BROKER_IP, MQTT_PORT, 60)
         mqtt_client.publish(topic, msg)
         mqtt_client.disconnect()
-        print(f"Sent msg: {msg} | on topic: {topic}")
+        # print(f"Sent msg: {msg} | on topic: {topic}")

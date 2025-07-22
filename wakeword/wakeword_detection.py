@@ -61,9 +61,8 @@ async def listen_for_wake_word(
                 keyword = keywords[keyword_index]
                 # print(f"[WakeWord] Detected: {keyword}")
                 if on_detected:
-                    await on_detected()
-                    print("Here in wakeword")
-            print("Outside of wakeword")
+                    await on_detected(keyword)
+                break
 
     except KeyboardInterrupt:
         print("[WakeWord] Interrupted by user.")
@@ -80,8 +79,11 @@ async def listen_for_wake_word(
 
 # Example usage (can be removed if used as a module):
 if __name__ == "__main__":
-    def handle_detection(keyword):
-        print(f">>> Wake word '{keyword}' triggered an action!")
+    import asyncio
+    # def handle_detection(keyword):
+    #     print(f">>> Wake word '{keyword}' triggered an action!")
+    def handle_detection(tmp):
+        print(f">>>>>>>> Custom <<<<<<<<<<")
 
     # listen_for_wake_word(on_detected=handle_detection)
-    listen_for_wake_word()
+    asyncio.run(listen_for_wake_word(on_detected=handle_detection))
