@@ -12,6 +12,7 @@ from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from typing import Union
 import os
+from sounds import play_chime
 
 load_dotenv()
 
@@ -77,6 +78,7 @@ class MainWorkflow(Workflow):
 
 async def handle_wakeword(keyword):
     logger.info(f"Wake word '{keyword}' detected. Starting workflow.")
+    play_chime()
     try:
         w = MainWorkflow(timeout=60, verbose=False)
         query = await asyncio.to_thread(transcribe_audio)

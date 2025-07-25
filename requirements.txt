@@ -1,7 +1,7 @@
-llama-index
-langchain-google-genai
-langchain
-paho-mqtt
-SpeechRecognition
-PyAudio
-pvporcupine
+llama-index==0.12.49
+langchain-google-genai==2.1.8
+langchain==0.3.26
+paho-mqtt==2.1.0
+SpeechRecognition==3.14.3
+PyAudio==0.2.14
+pvporcupine==3.0.5
