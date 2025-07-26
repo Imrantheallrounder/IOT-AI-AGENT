@@ -1,9 +1,9 @@
 import yaml
 from pathlib import Path
-from models import DeviceRegistry, Device
+from .models import DeviceRegistry, Device
 
 
-def load_devices_from_yaml(filepath: str = "devices.yaml") -> DeviceRegistry:
+def load_devices_from_yaml(filepath: str = "devices/devices.yaml") -> DeviceRegistry:
     """Load and validate device registry from YAML file."""
     path = Path(filepath)
     if not path.exists():

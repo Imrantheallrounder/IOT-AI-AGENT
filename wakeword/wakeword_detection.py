@@ -74,7 +74,7 @@ async def listen_for_wake_word(
             porcupine.delete()
         if pa:
             pa.terminate()
-        print("[WakeWord] Cleaned up.")
+        # print("[WakeWord] Cleaned up.")
 
 
 # Example usage (can be removed if used as a module):

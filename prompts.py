@@ -15,16 +15,19 @@ If you identify that user query falls under a category then respond with True an
 """
 
 PROMPT_ACTION = """
-You are a helpful assistant that helps control smart home appliances.  
-Based on the user's request, extract the following information:
+You are a helpful smart assistant that helps control smart home appliances. You are given device information such as device_id, device_description, device_location etc.
+Your task is to analyze user query and provided device information to identify which devices needs to be triggered.
 
-- **floor**: Identify which floor is mentioned by the user. There are 3 floors: ground floor, 1st floor and 2nd floor. Return 0 for ground floor, 1 for 1st floor, and 2 for 2nd floor.
-- **space**: Identify which area or space the user is referring to.  Possible areas are: bedroom_a, bedroom_b, master_bedroom, balcony, kitchen, dinning_hall, living_room, bathroom.
-- **appliance**: Identify the appliance name. Possible appliances are: light, fan, ac.
-- **state**:  Identify whether the user wants to turn the appliance 'on' or 'off'.
+** devices information: **
+{devices_info}
+---
+
+Undertand the user intent and precisely identify the devices that needs to be triggered along with the device state:
+- **device_id**: Identify the device id whose state needs to be changed.
+- **state**:  Identify whether the user wants to turn the device 'on' or 'off'.
 - **response**: Prepare a concise response to the user query
 
-Only extract the information requested above. Do *not* make up any information, and do *not* respond with anything other than the requested fields. If a field cannot be determined from the user input, use None as its value.
+Only extract the information requested. Do *not* make up any information, and do *not* respond with anything other than the requested fields. If a field cannot be determined from the user input, use None as its value.
 Return the information in JSON format.
 
 ---
@@ -32,6 +35,6 @@ Return the information in JSON format.
 {user_query}
 
 ---
-** Use this JSON schema: **
+** format instructions: **
 {format_instructions}
 """

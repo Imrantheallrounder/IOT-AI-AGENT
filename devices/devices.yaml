@@ -1,30 +1,21 @@
 devices:
-- capabilities:
-  - on_off
-  - brightness
-  - color
+- device_id: bulb-001
   device_description: Smart LED bulb with dimming capability
-  device_id: bulb-001
   device_location: bedroom_a
   device_name: light bulb
   device_type: light
   mqtt_topic: bedroom
-- capabilities:
+  capabilities:
   - on_off
-  - speed
+  - brightness
+  - color
+
+- device_id: fan-002
   device_description: a fan with 3 speeds
-  device_id: fan-002
   device_location: living_room
   device_name: ceiling fan
   device_type: light
   mqtt_topic: bedroom
-- capabilities:
+  capabilities:
   - on_off
-  - temperature
-  - fan_speed
-  device_description: Central air conditioning unit
-  device_id: ac-003
-  device_location: master_bedroom
-  device_name: air conditioner
-  device_type: ac
-  mqtt_topic: master_bedroom
+  - speed

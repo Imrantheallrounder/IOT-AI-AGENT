@@ -1,8 +1,8 @@
 import asyncio
 import logging
-from utility import utility
+from publisher import MQTTPublisher
 from transcribe import transcribe_audio
-from pydantic_structure import GeneralInfoEvent, QueryIntent, ApplianceAction, TakeActionEvent        # QueryIdentificationEvent
+from pydantic_structure import GeneralInfoEvent, QueryIntent, DevicesAction, TakeActionEvent        # QueryIdentificationEvent
 from prompts import PROMPT_QUERY_IDENTIFICATION, PROMPT_ACTION
 from dotenv import load_dotenv
 from wakeword.wakeword_detection import listen_for_wake_word
@@ -13,6 +13,7 @@ from langchain.prompts import PromptTemplate
 from typing import Union
 import os
 from sounds import play_chime
+from devices.loader import load_devices_from_yaml
 
 load_dotenv()
 
@@ -20,12 +21,17 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+ALL_DEVICES = load_devices_from_yaml()
+DEBUG = False
+
+mqtt_publisher = MQTTPublisher("localhost", 1883)
+
 class MainWorkflow(Workflow):    
     MODEL_NAME = os.environ.get("MODEL_NAME", "gemini-2.5-flash")
     llm = GoogleGenerativeAI(model=MODEL_NAME)
 
     @step
-    def identify_query_intent(self, ev: StartEvent) -> Union[StopEvent, TakeActionEvent, GeneralInfoEvent]:
+    async def identify_query_intent(self, ev: StartEvent) -> Union[StopEvent, TakeActionEvent, GeneralInfoEvent]:
         user_query = ev.query
         parser = JsonOutputParser(pydantic_object=QueryIntent)
         prompt_template = PromptTemplate(
@@ -34,13 +40,15 @@ class MainWorkflow(Workflow):
             partial_variables={"format_instructions":parser.get_format_instructions()})
         chain = prompt_template | self.llm | parser
         query = {"user_query":user_query}
-        response = chain.invoke(query)
+        response = await chain.ainvoke(query)
         # logger.info(f"Intent response: {response}")
         if response.get("action"):
-            logger.info("Action identified")
+            if DEBUG:
+                logger.info("Action identified")
             return TakeActionEvent(query=user_query)
         elif response.get("general"):
-            logger.info("General query identified")
+            if DEBUG:
+                logger.info("General query identified")
             return GeneralInfoEvent(query=user_query)
         elif response["restricted"]:
             return StopEvent(result="Restricted query identified. Please try again with a different query.")
@@ -48,24 +56,30 @@ class MainWorkflow(Workflow):
             return StopEvent(result="No event identified. Please try again.")
 
     @step
-    def take_action(self, ev: TakeActionEvent) -> StopEvent:
+    async def take_action(self, ev: TakeActionEvent) -> StopEvent:
         user_query = ev.query
-        parser = JsonOutputParser(pydantic_object=ApplianceAction)
+        parser = JsonOutputParser(pydantic_object=DevicesAction)
         prompt_template = PromptTemplate(
             template=PROMPT_ACTION,
             input_variables=["user_query"],
-            partial_variables={"format_instructions":parser.get_format_instructions()})
+            partial_variables={"format_instructions":parser.get_format_instructions(), "devices_info":ALL_DEVICES})
         chain = prompt_template | self.llm | parser
         query = {"user_query":user_query}
-        response = chain.invoke(query)
+        response = await chain.ainvoke(query)
+        # print("#"*100)
         # logger.info(f"Action response: {response}")
-        topic, msg = utility.get_topic_msg(response)
-        logger.info(f"Publishing to topic: {topic}, message: {msg}")
-        utility.publish_message(str(topic), str(msg))
+        tasks = []
+        for item in response.get('devices'):
+            topic = item.get('device_id')
+            payload = {'state': item.get('state')}
+            if DEBUG:
+                logger.info(f"Publishing to topic: {topic}, |  Payload: {payload}")
+            tasks.append(mqtt_publisher.publish(topic, payload))
+        await asyncio.gather(*tasks)
         return StopEvent(result=response)
     
     @step
-    def answer_general_query(self, ev: GeneralInfoEvent) -> StopEvent:
+    async def answer_general_query(self, ev: GeneralInfoEvent) -> StopEvent:
         user_query = ev.query
         prompt_template = PromptTemplate(
             template="You are an AI assistant. Your response will be used as audio response, Answer the user query in concise manner. user query: {query}",
@@ -73,7 +87,7 @@ class MainWorkflow(Workflow):
         )
         chain = prompt_template | self.llm
         query = {"query": user_query}
-        response = chain.invoke(query)
+        response = await chain.ainvoke(query)
         return StopEvent(result=response)
 
 async def handle_wakeword(keyword):
@@ -87,6 +101,8 @@ async def handle_wakeword(keyword):
             return
         out = await w.run(query=query)
         logger.info(f"Workflow output: {out}")
+        # if DEBUG:
+        #     logger.info(f"Workflow output: {out}")
     except Exception as e:
         logger.exception(f"Error during workflow execution: {e}")
 
