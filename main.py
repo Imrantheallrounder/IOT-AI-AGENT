@@ -96,12 +96,3 @@ async def main():
 
 if __name__=="__main__":
     asyncio.run(main())
-
-
-# device_info = {
-#     'device_name': 'light bulb',
-#     'device_id': 'bulb-001',
-#     'device_description': 'a light bulb that can be turned on or off',
-#     'device_location': 'bedroom_a',
-#     'device_version': '1.0',
-# }
