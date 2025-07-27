@@ -28,6 +28,8 @@ def transcribe_audio():
         print(f"Could not request results; {e}")
     except sr.WaitTimeoutError:
         print("WaitTimeoutError")
+    except Exception as e:
+        print("Something went wrong!!!")
         
     return None
 
