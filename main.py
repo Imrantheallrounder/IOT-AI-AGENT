@@ -71,9 +71,11 @@ class MainWorkflow(Workflow):
         tasks = []
         for item in response.get('devices'):
             topic = item.get('device_id')
-            payload = {'state': item.get('state')}
+            # payload = {'state': item.get('state')}
+            payload = item.get('state')
             if DEBUG:
                 logger.info(f"Publishing to topic: {topic}, |  Payload: {payload}")
+            logger.info(f"Publishing to topic: {topic}, |  Payload: {payload}")
             tasks.append(mqtt_publisher.publish(topic, payload))
         await asyncio.gather(*tasks)
         return StopEvent(result=response)

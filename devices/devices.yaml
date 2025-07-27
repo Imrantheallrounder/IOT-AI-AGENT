@@ -1,7 +1,7 @@
 devices:
 - device_id: bulb-001
-  device_description: Smart LED bulb with dimming capability
-  device_location: bedroom_a
+  device_description: Smart LED light bulb in the living room
+  device_location: living room
   device_name: light bulb
   device_type: light
   mqtt_topic: bedroom
@@ -10,7 +10,7 @@ devices:
   - brightness
   - color
 
-- device_id: fan-002
+- device_id: fan-001
   device_description: a fan with 3 speeds
   device_location: living_room
   device_name: ceiling fan
