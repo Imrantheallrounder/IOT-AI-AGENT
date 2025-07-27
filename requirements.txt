@@ -5,3 +5,6 @@ SpeechRecognition==3.14.3
 PyAudio==0.2.14
 pvporcupine==3.0.5
 aiomqtt==2.4.0
+google-genai==1.27.0
+groq==0.30.0
+langchain-groq==0.3.6

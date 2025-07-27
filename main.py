@@ -8,12 +8,12 @@ from dotenv import load_dotenv
 from wakeword.wakeword_detection import listen_for_wake_word
 from llama_index.core.workflow import (StartEvent, StopEvent, step, Workflow)
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from typing import Union
 import os
 from sounds import play_chime
 from devices.loader import load_devices_from_yaml
+from utility import create_llm
 
 load_dotenv()
 
@@ -28,7 +28,8 @@ mqtt_publisher = MQTTPublisher("localhost", 1883)
 
 class MainWorkflow(Workflow):    
     MODEL_NAME = os.environ.get("MODEL_NAME", "gemini-2.5-flash")
-    llm = GoogleGenerativeAI(model=MODEL_NAME)
+    llm = create_llm(MODEL_NAME, temperature=0)
+    print(llm)
 
     @step
     async def identify_query_intent(self, ev: StartEvent) -> Union[StopEvent, TakeActionEvent, GeneralInfoEvent]:
