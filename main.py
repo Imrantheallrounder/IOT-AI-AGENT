@@ -7,7 +7,7 @@ from prompts import PROMPT_QUERY_IDENTIFICATION, PROMPT_ACTION
 from dotenv import load_dotenv
 from wakeword.wakeword_detection import listen_for_wake_word
 from llama_index.core.workflow import (StartEvent, StopEvent, step, Workflow)
-from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 from typing import Union
 import os
@@ -34,7 +34,7 @@ class MainWorkflow(Workflow):
     @step
     async def identify_query_intent(self, ev: StartEvent) -> Union[StopEvent, TakeActionEvent, GeneralInfoEvent]:
         user_query = ev.query
-        parser = JsonOutputParser(pydantic_object=QueryIntent)
+        parser = PydanticOutputParser(pydantic_object=QueryIntent)
         prompt_template = PromptTemplate(
             template=PROMPT_QUERY_IDENTIFICATION,
             input_variables=["user_query"],
@@ -59,7 +59,7 @@ class MainWorkflow(Workflow):
     @step
     async def take_action(self, ev: TakeActionEvent) -> StopEvent:
         user_query = ev.query
-        parser = JsonOutputParser(pydantic_object=DevicesAction)
+        parser = PydanticOutputParser(pydantic_object=DevicesAction)
         prompt_template = PromptTemplate(
             template=PROMPT_ACTION,
             input_variables=["user_query"],
