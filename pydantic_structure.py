@@ -21,6 +21,7 @@ class QueryIntent(BaseModel):
 
 class ApplianceAction(BaseModel):
     device_id: str = Field(description="Identify the device id.")
+    device_location: str = Field(description="Identify the device location. return the exact keyword.")
     state: str = Field(description="Identify whether user wants to turn the device on or off. (on | off)")
 
 class DevicesAction(BaseModel):

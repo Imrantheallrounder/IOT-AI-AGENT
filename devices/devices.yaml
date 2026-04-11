@@ -1,7 +1,7 @@
 devices:
 - device_id: bulb-001
-  device_description: Smart LED light bulb in the living room
-  device_location: living room
+  device_description: Smart LED light bulb in the bedroom.
+  device_location: bedroom
   device_name: light bulb
   device_type: light
   mqtt_topic: bedroom
@@ -10,11 +10,33 @@ devices:
   - brightness
   - color
 
-- device_id: fan-001
-  device_description: a fan with 3 speeds
-  device_location: living_room
-  device_name: ceiling fan
+- device_id: bulb-002
+  device_description: Smart LED light bulb in the bedroom. Used for extra lighting for studying and other stuffs.
+  device_location: bedroom
+  device_name: light bulb
   device_type: light
+  mqtt_topic: bedroom
+  capabilities:
+  - on_off
+  - brightness
+  - color
+
+- device_id: bulb-003
+  device_description: Light bulb in living room.
+  device_location: living_room
+  device_name: light bulb
+  device_type: light
+  mqtt_topic: living_room
+  capabilities:
+  - on_off
+  - brightness
+  - color
+
+- device_id: fan-001
+  device_description: a fan in bedroom
+  device_location: bedroom
+  device_name: ceiling fan
+  device_type: fan
   mqtt_topic: bedroom
   capabilities:
   - on_off

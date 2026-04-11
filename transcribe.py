@@ -1,5 +1,5 @@
 import speech_recognition as sr
-import time
+from sounds import play_chime
 
 # Initialize recognizer
 recognizer = sr.Recognizer()
@@ -12,8 +12,9 @@ def transcribe_audio():
         # Use the microphone as the audio source
         with sr.Microphone() as source:
             # Adjust for ambient noise
-            # recognizer.adjust_for_ambient_noise(source, duration=0.2)
+            recognizer.adjust_for_ambient_noise(source)
             # Listen to the audio from the microphone
+            play_chime()
             print("Please say something...")
             audio = recognizer.listen(source, timeout=2)
 

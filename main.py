@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 ALL_DEVICES = load_devices_from_yaml()
 DEBUG = False
 
-mqtt_publisher = MQTTPublisher("localhost", 1883)
+mqtt_publisher = MQTTPublisher("localhost", 1884)
 
 class MainWorkflow(Workflow):    
     MODEL_NAME = os.environ.get("MODEL_NAME", "gemini-2.5-flash")
@@ -71,7 +71,9 @@ class MainWorkflow(Workflow):
         # logger.info(f"Action response: {response}")
         tasks = []
         for item in response.get('devices'):
-            topic = item.get('device_id')
+            device_id = item.get('device_id')
+            device_location = item.get('device_location')
+            topic = f"{device_location}/{device_id}"
             # payload = {'state': item.get('state')}
             payload = item.get('state')
             if DEBUG:
@@ -91,11 +93,12 @@ class MainWorkflow(Workflow):
         chain = prompt_template | self.llm
         query = {"query": user_query}
         response = await chain.ainvoke(query)
+        response = response.content
         return StopEvent(result=response)
 
 async def handle_wakeword(keyword):
     logger.info(f"Wake word '{keyword}' detected. Starting workflow.")
-    play_chime()
+    # play_chime()
     try:
         w = MainWorkflow(timeout=60, verbose=False)
         query = await asyncio.to_thread(transcribe_audio)
