@@ -1,6 +1,6 @@
 devices:
 - device_id: bulb-001
-  device_description: Smart LED light bulb in the bedroom.
+  device_description: Smart LED light bulb in the bedroom. standard bulb should be used when user asks for normal lightings.
   device_location: bedroom
   device_name: light bulb
   device_type: light
@@ -11,7 +11,7 @@ devices:
   - color
 
 - device_id: bulb-002
-  device_description: Smart LED light bulb in the bedroom. Used for extra lighting for studying and other stuffs.
+  device_description: Smart LED light bulb in the bedroom. Used for extra lighting for studying and other stuffs. Should be used for more lightings in the room.
   device_location: bedroom
   device_name: light bulb
   device_type: light
@@ -22,15 +22,26 @@ devices:
   - color
 
 - device_id: bulb-003
-  device_description: Light bulb in living room.
-  device_location: living_room
+  device_description: Lamp used for bedtime. SHould be used when user wants to sleep.
+  device_location: bedroom
   device_name: light bulb
   device_type: light
-  mqtt_topic: living_room
+  mqtt_topic: bedroom
   capabilities:
   - on_off
   - brightness
   - color
+
+# - device_id: bulb-003
+#   device_description: Light bulb in living room.
+#   device_location: living_room
+#   device_name: light bulb
+#   device_type: light
+#   mqtt_topic: living_room
+#   capabilities:
+#   - on_off
+#   - brightness
+#   - color
 
 - device_id: fan-001
   device_description: a fan in bedroom

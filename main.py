@@ -71,11 +71,17 @@ class MainWorkflow(Workflow):
         # logger.info(f"Action response: {response}")
         tasks = []
         for item in response.get('devices'):
-            device_id = item.get('device_id')
+
             device_location = item.get('device_location')
-            topic = f"{device_location}/{device_id}"
+            device_id = item.get('device_id')
+            device_state = item.get('state')
+            
+            topic = f"{device_location}"
             # payload = {'state': item.get('state')}
-            payload = item.get('state')
+            # payload = item.get('state')
+            payload = {device_id: device_state}
+            # payload = str(payload)
+
             if DEBUG:
                 logger.info(f"Publishing to topic: {topic}, |  Payload: {payload}")
             logger.info(f"Publishing to topic: {topic}, |  Payload: {payload}")
