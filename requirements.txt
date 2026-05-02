@@ -8,3 +8,4 @@ aiomqtt==2.4.0
 google-genai==1.27.0
 groq==0.30.0
 langchain-groq==0.3.6
+llama-index-utils-workflow==0.10.1

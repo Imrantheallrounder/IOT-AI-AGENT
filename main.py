@@ -7,6 +7,7 @@ from prompts import PROMPT_QUERY_IDENTIFICATION, PROMPT_ACTION
 from dotenv import load_dotenv
 from wakeword.wakeword_detection import listen_for_wake_word
 from llama_index.core.workflow import (StartEvent, StopEvent, step, Workflow)
+from llama_index.utils.workflow import draw_all_possible_flows
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.prompts import PromptTemplate
 from typing import Union
@@ -107,6 +108,8 @@ async def handle_wakeword(keyword):
     # play_chime()
     try:
         w = MainWorkflow(timeout=60, verbose=False)
+        # Generate an HTML visualization of the workflow of all possible routes
+        draw_all_possible_flows(MainWorkflow, filename="workflow.html")
         query = await asyncio.to_thread(transcribe_audio)
         if not query:
             logger.warning("No valid query found.")
