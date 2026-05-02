@@ -12,7 +12,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain.prompts import PromptTemplate
 from typing import Union
 import os
-from sounds import play_chime
+from sounds import play_chime, play_sound
 from devices.loader import load_devices_from_yaml
 from utility import create_llm
 
@@ -88,6 +88,8 @@ class MainWorkflow(Workflow):
             logger.info(f"Publishing to topic: {topic}, |  Payload: {payload}")
             tasks.append(mqtt_publisher.publish(topic, payload))
         await asyncio.gather(*tasks)
+        assistant_response = response.get("response")
+        play_sound(assistant_response)
         return StopEvent(result=response)
     
     @step
@@ -99,9 +101,17 @@ class MainWorkflow(Workflow):
         )
         chain = prompt_template | self.llm
         query = {"query": user_query}
-        response = await chain.ainvoke(query)
-        response = response.content
-        return StopEvent(result=response)
+        # response = await chain.ainvoke(query)
+        # response = response.content
+        response = chain.astream(query)
+        full_response = ""
+        async for token in response:
+            partial_content = token.content
+            print(partial_content, end="")
+            full_response += partial_content
+        play_sound(full_response)
+        
+        return StopEvent(result=full_response)
 
 async def handle_wakeword(keyword):
     logger.info(f"Wake word '{keyword}' detected. Starting workflow.")

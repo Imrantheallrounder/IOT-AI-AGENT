@@ -306,6 +306,11 @@ sudo apt update
 sudo apt install mosquitto mosquitto-clients
 ```
 
+**Mac:**
+```
+brew install espeak-ng
+```
+
 **Windows:**
 Download from [Mosquitto Downloads](https://mosquitto.org/download/)
 

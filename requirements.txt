@@ -9,3 +9,6 @@ google-genai==1.27.0
 groq==0.30.0
 langchain-groq==0.3.6
 llama-index-utils-workflow==0.10.1
+kokoro==0.9.4
+soundfile==0.13.1
+sounddevice==0.5.5
